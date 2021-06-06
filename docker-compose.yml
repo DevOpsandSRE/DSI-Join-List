@@ -1,0 +1,9 @@
+version: "3"
+
+services:
+  bot:
+    image: dsi-join-list:latest
+    build:
+      .
+    volumes:
+      - ./config.json:/srv/DSI-Join-List/config.json
