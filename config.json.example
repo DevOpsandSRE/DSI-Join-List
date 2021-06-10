@@ -1,8 +1,8 @@
 {
-  "prefix": "",
-  "db_username": "",
-  "db_password": "",
-  "db_hostname": "",
-  "staff_role_name": "",
-  "token": ""
+  "prefix": "--",
+  "db_username": "dsijoin",
+  "db_password": "password",
+  "db_hostname": "db",
+  "staff_role_name": "Staff",
+  "token": "XXXXXXXXXXXXXXXXX"
 }
