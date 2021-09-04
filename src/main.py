@@ -23,7 +23,7 @@ db = pg8000.native.Connection(config["db_username"],
 
 
 # Util functions
-def send_paginated_ids(ctx, ids):
+async def send_paginated_ids(ctx, ids):
     amount = len(ids) // 100
     pages = []
 
@@ -75,7 +75,7 @@ async def fetch(ctx: Context, *, args):
     ids = db.run("""SELECT id FROM joins WHERE joined_at BETWEEN :first::timestamp AND :second::timestamp""",
                  first=dates[0], second=dates[1])
 
-    send_paginated_ids(ctx, ids)
+    await send_paginated_ids(ctx, ids)
 
 
 bot.remove_command("help")
