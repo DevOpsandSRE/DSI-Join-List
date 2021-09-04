@@ -6,6 +6,7 @@ import discord
 import pg8000.native
 from discord.ext import commands
 from discord.ext.commands import Context
+from disputils import BotEmbedPaginator
 
 # Set up logging
 coloredlogs.install(level="INFO", fmt="[%(asctime)s][%(levelname)s]: %(message)s")
@@ -19,6 +20,30 @@ bot = commands.Bot(command_prefix=config["prefix"], intents=intents)
 db = pg8000.native.Connection(config["db_username"],
                               host=config["db_hostname"] if config["db_hostname"] != "" else "localhost",
                               password=config["db_password"])
+
+
+# Util functions
+def send_paginated_ids(ctx, ids):
+    amount = len(ids) // 100
+    pages = []
+
+    if len(ids) == 0:
+        await ctx.send("No members joined in that time frame!")
+        return
+
+    if len(ids) <= 100:
+        await ctx.send("\n".join(id[0] for id in ids))
+        return
+
+    for i in range(amount):
+        pages.append(ids[:100])
+        del ids[:100]
+
+    if len(ids) > 0:
+        pages.append(ids[:100])
+
+    paginator = BotEmbedPaginator(ctx, pages)
+    await paginator.run()
 
 
 @bot.event
@@ -50,10 +75,7 @@ async def fetch(ctx: Context, *, args):
     ids = db.run("""SELECT id FROM joins WHERE joined_at BETWEEN :first::timestamp AND :second::timestamp""",
                  first=dates[0], second=dates[1])
 
-    if len(ids) > 0:
-        await ctx.send("\n".join(id[0] for id in ids))
-    else:
-        await ctx.send("No members joined in that time frame!")
+    send_paginated_ids(ctx, ids)
 
 
 bot.remove_command("help")
