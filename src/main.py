@@ -4,6 +4,7 @@ import logging
 import coloredlogs
 import discord
 import pg8000.native
+from discord import Embed, Color
 from discord.ext import commands
 from discord.ext.commands import Context
 from disputils import BotEmbedPaginator
@@ -27,20 +28,23 @@ async def send_paginated_ids(ctx, ids):
     amount = len(ids) // 100
     pages = []
 
+    def get_embed(id_page):
+        return Embed(description="\n".join(id[0] for id in id_page), color=Color.red())
+
     if len(ids) == 0:
         await ctx.send("No members joined in that time frame!")
         return
 
     if len(ids) <= 100:
-        await ctx.send("\n".join(id[0] for id in ids))
+        await ctx.send(get_embed(ids))
         return
 
     for i in range(amount):
-        pages.append("\n".join(id[0] for id in ids[:100]))
+        pages.append(get_embed(ids[:100]))
         del ids[:100]
 
     if len(ids) > 0:
-        pages.append("\n".join(id[0] for id in ids[:100]))
+        pages.append(get_embed(ids[:100]))
 
     paginator = BotEmbedPaginator(ctx, pages)
     await paginator.run()
