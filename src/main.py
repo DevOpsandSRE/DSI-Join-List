@@ -36,7 +36,7 @@ async def send_paginated_ids(ctx, ids):
         return
 
     if len(ids) <= 100:
-        await ctx.send(get_embed(ids))
+        await ctx.send(embed=get_embed(ids))
         return
 
     for i in range(amount):
