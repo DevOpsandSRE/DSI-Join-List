@@ -36,11 +36,11 @@ def send_paginated_ids(ctx, ids):
         return
 
     for i in range(amount):
-        pages.append(ids[:100])
+        pages.append("\n".join(id[0] for id in ids[:100]))
         del ids[:100]
 
     if len(ids) > 0:
-        pages.append(ids[:100])
+        pages.append("\n".join(id[0] for id in ids[:100]))
 
     paginator = BotEmbedPaginator(ctx, pages)
     await paginator.run()
