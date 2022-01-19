@@ -4,7 +4,7 @@ WORKDIR /srv/DSI-Join-List/
 
 RUN apt-get update
 RUN apt-get install build-essential -y
-RUN pip install -r requirements.txt
+RUN pip3 install -r requirements.txt
 
 WORKDIR /srv/DSI-Join-List/src/
 CMD python ./main.py
