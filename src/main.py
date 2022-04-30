@@ -76,7 +76,7 @@ async def on_command_error(ctx, error):
 async def fetch(ctx: Context, *, args):
     dates = [arg.strip() for arg in args.split(";")]
 
-    ids = db.run("""SELECT id FROM joins WHERE joined_at BETWEEN :first::timestamp AND :second::timestamp""",
+    ids = db.run("""SELECT DISTINCT(id) FROM joins WHERE joined_at BETWEEN :first::timestamp AND :second::timestamp""",
                  first=dates[0], second=dates[1])
 
     await send_paginated_ids(ctx, ids)
